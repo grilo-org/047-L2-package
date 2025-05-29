@@ -3,12 +3,16 @@ package com.product.service;
 import com.product.dto.PedidoRequest;
 import com.product.dto.PedidoResponse;
 import com.product.dto.PedidoResponseWrapper;
-import com.product.model.*;
+import com.product.model.CaixaUsada;
+import com.product.model.Dimensoes;
+import com.product.model.Pedido;
+import com.product.model.Produto;
 import com.product.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -39,6 +43,16 @@ public class CaixaService {
     }
 
     PedidoResponse processarPedido(Pedido pedido) {
+        for (Produto produto : pedido.getProdutos()) {
+            Dimensoes dim = produto.getDimensoes();
+            if (dim == null) {
+                throw new IllegalArgumentException("Dimensões não informadas para o produto: " + produto.getProduto_id());
+            }
+            if (dim.getAltura() <= 0 || dim.getLargura() <= 0 || dim.getComprimento() <= 0) {
+                throw new IllegalArgumentException("Dimensões inválidas para o produto: " + produto.getProduto_id());
+            }
+        }
+
         PedidoResponse response = new PedidoResponse();
         response.setPedido_id(pedido.getPedido_id());
 
@@ -57,6 +71,9 @@ public class CaixaService {
     }
 
     CaixaUsada encontrarMelhorCaixa(List<Produto> produtos) {
+        if (produtos.equals(Collections.emptyList()))
+            throw new IllegalArgumentException("A lista de produtos está vazia");
+
         CaixaUsada caixaUsada = new CaixaUsada();
         List<String> produtosNaCaixa = new ArrayList<>();
 
