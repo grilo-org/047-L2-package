@@ -71,7 +71,7 @@ public class CaixaService {
     }
 
     CaixaUsada encontrarMelhorCaixa(List<Produto> produtos) {
-        if (produtos.equals(Collections.emptyList()))
+        if (produtos.isEmpty())
             throw new IllegalArgumentException("A lista de produtos está vazia");
 
         CaixaUsada caixaUsada = new CaixaUsada();
