@@ -3,6 +3,7 @@ package com.product.controller;
 import com.product.dto.PedidoRequest;
 import com.product.dto.PedidoResponseWrapper;
 import com.product.service.CaixaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class PedidoController {
 
     @PostMapping("/embalar")
     @ResponseStatus(HttpStatus.OK)
-    public PedidoResponseWrapper processarPedidos(@RequestBody PedidoRequest pedidoRequest) {
+    public PedidoResponseWrapper processarPedidos(@Valid @RequestBody PedidoRequest pedidoRequest) {
         return caixaService.processarPedidos(pedidoRequest);
     }
 }
